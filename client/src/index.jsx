@@ -54,10 +54,10 @@ class App extends React.Component{
         })
     }
 
-    addStoneItem(name, age){
+    addStoneItem(name, age, location){
         axios.post('/api/stone', {
             name: name,
-            location: [20,30],
+            location: location,
             age: age
         }).then(response => {
             if(response.status === 200){
@@ -65,7 +65,7 @@ class App extends React.Component{
                 const item = { 
                     _id: response.data._id,
                     name: response.data.name, 
-                    age: age,
+                    age: response.data.age,
                     location: response.data.location,
                 }
                 this.state.stoneList.push(item)

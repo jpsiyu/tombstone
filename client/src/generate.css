@@ -6,10 +6,21 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.gen_content input {
+.location {
+    padding: 10px;
+    margin: 5px;
+    width: 50px;
+}
+.normal{
     padding: 10px;
     width: 200px;
     margin: 5px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 .gen_content button{

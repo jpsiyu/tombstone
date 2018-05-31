@@ -9,10 +9,16 @@ class Generate extends React.Component{
 
     onSubmit(event){
         event.preventDefault()
-        this.props.addStoneItem(this._nameElement.value, this._ageElement.value)
+        this.props.addStoneItem(
+            this._nameElement.value, 
+            this._ageElement.value, 
+            [this._lng.value, this._lat.value],
+        )
         alert(this._nameElement.value + ' added')
         this._nameElement.value = ''
         this._ageElement.value = ''
+        this._lng.value = ''
+        this._lat.value = ''
     }
 
     render(){
@@ -21,11 +27,17 @@ class Generate extends React.Component{
             <form onSubmit={this.onSubmit} >
                 Name
                 <br />
-                <input type="text" required placeholder="name" ref={el => this._nameElement = el}/> 
+                <input className="normal" type="text" required placeholder="name" ref={el => this._nameElement = el}/> 
                 <br />
                 Age
                 <br />
-                <input type="number" placeholder="age" ref={el => this._ageElement = el}/> 
+                <input className="normal" type="number" placeholder="age" ref={el => this._ageElement = el}/> 
+                <br />
+                <br />
+                Location
+                <br />
+                Lng<input className="location" type="number" placeholder="longitude" ref={el => this._lng= el}/> 
+                Lat<input className="location" type="number" placeholder="latitude" ref={el => this._lat= el}/> 
                 <br />
                 <button type="submit"> Sure</button>
             </form>
