@@ -5,13 +5,14 @@ import './stone.css'
 class Stone extends React.Component{
     render(){
         const stoneInfo = this.props.stoneInfo
+        const deleteHandler = this.props.deleteStoneItem
         return <div className='stone'>
             <div className='stone_img'>
                 <img src="res/stone.png" alt="stone" />
             </div>
             <div className='stone_desc'>
-                <p>{stoneInfo.name}</p>
-                <p>[{stoneInfo.location[0]},{stoneInfo.location[1]}]</p>
+                {stoneInfo.name} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]
+                <button onClick={ () => deleteHandler(stoneInfo.id)}>Delete</button>
             </div>
         </div>
     }
@@ -33,7 +34,7 @@ class StoneList extends React.Component{
 
     render(){
         const createStone = item=> {
-            return <Stone key={item.id} stoneInfo={item}/>
+            return <Stone key={item.id} stoneInfo={item} deleteStoneItem={this.props.deleteStoneItem}/>
         }
         return <div className='stoneList'>
             {this.state.stoneList.map(createStone)}

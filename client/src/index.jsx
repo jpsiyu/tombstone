@@ -17,6 +17,7 @@ class App extends React.Component{
         }
         this.fetchData = this.fetchData.bind(this)
         this.addStoneItem = this.addStoneItem.bind(this)
+        this.deleteStoneItem = this.deleteStoneItem.bind(this)
     }
 
     fetchData(){
@@ -44,8 +45,15 @@ class App extends React.Component{
         return stoneList
     }
 
+    deleteStoneItem(id){
+        const list = this.state.stoneList.filter( item => item.id !== id)
+        this.setState({
+            stoneList: list
+        })
+    }
+
     addStoneItem(name){
-        const id = this.state.stoneList.length + 1
+        const id = Date.now()
         const item = {id:id, name:name, location:[20,30]}
         const newList = this.state.stoneList.push(item)
         this.setState({stoneList: this.state.stoneList})
@@ -63,7 +71,7 @@ class App extends React.Component{
                 </ul>
             </div>
 
-          <Route exact path="/" component={()=><StoneList fetchData={this.fetchData} /> } />
+          <Route exact path="/" component={()=><StoneList fetchData={this.fetchData} deleteStoneItem={this.deleteStoneItem} /> } />
           <Route path="/Generate" component={()=><Generate addStoneItem={this.addStoneItem} /> } />
           <Route path="/topics" component={Topics} />
         </div>

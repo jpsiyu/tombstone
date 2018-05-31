@@ -21,12 +21,19 @@
     padding: 10px;
     background-color: cornflowerblue;
     width: 100%;
+    color: aliceblue;
+    font-size: 20px;
+    font-family: 'Times New Roman', Times, serif
+}
+
+.stone_desc button {
+    padding: 5px;
+    margin: 20px;
+    background-color: brown;
+    color: aliceblue;
+    font-size: 20px;
 }
 
 .stone_img img{
-    height: 70px;
-}
-
-.stone p{
-    text-align: center;
+    width: 200px;
 }
