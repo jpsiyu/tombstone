@@ -1,0 +1,26 @@
+.gen_content {
+    padding: 20px;
+    margin: 10px;
+    border-radius: 5px;
+    background-color: aliceblue;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.gen_content input {
+    padding: 10px;
+    width: 200px;
+    margin: 5px;
+}
+
+.gen_content button{
+    padding: 10px;
+    margin: 5px;
+    width: 220px;
+    background-color: rgb(91, 188, 233);
+}
+
+.form_content{
+    padding: 20px;
+    width: 300px;
+    background-color: rgba(102, 107, 107, 0.5);
+}

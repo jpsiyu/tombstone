@@ -1,7 +1,36 @@
+body{
+    background-color: #FFCC00;
+}
+
 .content {
+    margin: 10px;
+}
+
+.content p{
+    font-size: 30px;
+    padding: 5px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.header {
+    margin: 10px;
+    background-color: #111;
+}
+
+.header ul li{
+    display: inline-block;
+}
+
+.header ul li a{
     padding: 20px;
-    background-color: aquamarine;
-    font-family: sans-serif;
+    font-family: 'Courier New', Courier, monospace;
+    color: aliceblue;
     font-size: 20px;
-    border: 5px solid greenyellow;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.active {
+    background-color: cornflowerblue;
 }
