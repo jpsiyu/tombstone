@@ -9,8 +9,8 @@ class Generate extends React.Component{
 
     onSubmit(event){
         event.preventDefault()
-        console.log('onSubmit', this._nameElement.value, this._ageElement.value)
-        alert(this._nameElement.value + 'added')
+        this.props.addStoneItem(this._nameElement.value)
+        alert(this._nameElement.value + ' added')
         this._nameElement.value = ''
         this._ageElement.value = ''
     }

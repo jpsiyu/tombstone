@@ -10,6 +10,47 @@ const About = () => <p>About</p>
 const Topics = () => <p>Topics</p>
 
 class App extends React.Component{
+    constructor(){
+        super()
+        this.state= {
+            stoneList: this.fetchServer()
+        }
+        this.fetchData = this.fetchData.bind(this)
+        this.addStoneItem = this.addStoneItem.bind(this)
+    }
+
+    fetchData(){
+        return this.state.stoneList
+    }
+
+    fetchServer(){
+        const stoneList = [
+            {
+                id:1,
+                name: 'Jason',
+                location:[20, 30]
+            },
+            {
+                id:2,
+                name: 'Bill',
+                location:[10, 98]
+            },
+            {
+                id:3,
+                name: 'Rose',
+                location:[128, 890]
+            },
+        ]
+        return stoneList
+    }
+
+    addStoneItem(name){
+        const id = this.state.stoneList.length + 1
+        const item = {id:id, name:name, location:[20,30]}
+        const newList = this.state.stoneList.push(item)
+        this.setState({stoneList: this.state.stoneList})
+    }
+
     render(){
         return <Router>
         <div className="content">
@@ -22,8 +63,8 @@ class App extends React.Component{
                 </ul>
             </div>
 
-          <Route exact path="/" component={StoneList}/>
-          <Route path="/Generate" component={Generate} />
+          <Route exact path="/" component={()=><StoneList fetchData={this.fetchData} /> } />
+          <Route path="/Generate" component={()=><Generate addStoneItem={this.addStoneItem} /> } />
           <Route path="/topics" component={Topics} />
         </div>
       </Router>

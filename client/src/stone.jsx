@@ -21,29 +21,14 @@ class StoneList extends React.Component{
     constructor(){
         super()
         this.state = {
-            stoneList: this.fetchData()
+            stoneList: []
         }
     }
 
-    fetchData(){
-        const stoneList = [
-            {
-                id:1,
-                name: 'Jason',
-                location:[20, 30]
-            },
-            {
-                id:2,
-                name: 'Bill',
-                location:[10, 98]
-            },
-            {
-                id:3,
-                name: 'Rose',
-                location:[128, 890]
-            },
-        ]
-        return stoneList
+    componentWillMount(){
+        this.setState({
+            stoneList: this.props.fetchData()
+        })
     }
 
     render(){
