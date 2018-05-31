@@ -11,8 +11,8 @@ class Stone extends React.Component{
                 <img src="res/stone.png" alt="stone" />
             </div>
             <div className='stone_desc'>
-                {stoneInfo.name} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]
-                <button onClick={ () => deleteHandler(stoneInfo.id)}>Delete</button>
+                {stoneInfo.name} with {stoneInfo.age} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]
+                <button onClick={ () => deleteHandler(stoneInfo._id)}>Delete</button>
             </div>
         </div>
     }
@@ -34,7 +34,7 @@ class StoneList extends React.Component{
 
     render(){
         const createStone = item=> {
-            return <Stone key={item.id} stoneInfo={item} deleteStoneItem={this.props.deleteStoneItem}/>
+            return <Stone key={item._id} stoneInfo={item} deleteStoneItem={this.props.deleteStoneItem}/>
         }
         return <div className='stoneList'>
             {this.state.stoneList.map(createStone)}

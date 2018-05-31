@@ -2,18 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {BrowserRouter as Router, Route, NavLink as Link} from 'react-router-dom'
 import './index.css'
+import axios from 'axios'
 
 import {StoneList} from './stone.jsx'
 import {Generate} from './generate.jsx'
-
-const About = () => <p>About</p>
-const Topics = () => <p>Topics</p>
+import {Topics} from './topics.jsx'
 
 class App extends React.Component{
     constructor(){
         super()
         this.state= {
-            stoneList: this.fetchServer()
+            stoneList: []
         }
         this.fetchData = this.fetchData.bind(this)
         this.addStoneItem = this.addStoneItem.bind(this)
@@ -25,38 +24,60 @@ class App extends React.Component{
     }
 
     fetchServer(){
-        const stoneList = [
-            {
-                id:1,
-                name: 'Jason',
-                location:[20, 30]
-            },
-            {
-                id:2,
-                name: 'Bill',
-                location:[10, 98]
-            },
-            {
-                id:3,
-                name: 'Rose',
-                location:[128, 890]
-            },
-        ]
-        return stoneList
-    }
-
-    deleteStoneItem(id){
-        const list = this.state.stoneList.filter( item => item.id !== id)
-        this.setState({
-            stoneList: list
+        axios.get('/api/stones').then(response => {
+            if(response.status === 200){
+                const genStone = obj => {
+                    const stone = {
+                        _id: obj._id,
+                        name: obj.name,
+                        age: obj.age,
+                        location: obj.location
+                    }
+                    return stone
+                }
+                let stoneList = response.data.map(genStone)
+                this.setState({stoneList})
+            }
         })
     }
 
-    addStoneItem(name){
-        const id = Date.now()
-        const item = {id:id, name:name, location:[20,30]}
-        const newList = this.state.stoneList.push(item)
-        this.setState({stoneList: this.state.stoneList})
+    deleteStoneItem(_id){
+        axios.delete('/api/delete', {params: {_id:_id}}).then(response => {
+            if(response.status === 200){
+                const list = this.state.stoneList.filter( item => item._id !== _id)
+                this.setState({
+                    stoneList: list
+                })
+            }else{
+                console.log('delte item error')
+            }
+        })
+    }
+
+    addStoneItem(name, age){
+        axios.post('/api/stone', {
+            name: name,
+            location: [20,30],
+            age: age
+        }).then(response => {
+            if(response.status === 200){
+                response.data
+                const item = { 
+                    _id: response.data._id,
+                    name: response.data.name, 
+                    age: age,
+                    location: response.data.location,
+                }
+                this.state.stoneList.push(item)
+                this.setState({stoneList: this.state.stoneList})
+            }
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    componentWillMount(){
+        this.fetchServer()
     }
 
     render(){
