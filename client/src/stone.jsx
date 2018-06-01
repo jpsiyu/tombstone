@@ -1,19 +1,23 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import './stone.css'
+import {Button, Row, Col, Image, Grid, Media} from 'react-bootstrap'
 
 class Stone extends React.Component{
     render(){
         const stoneInfo = this.props.stoneInfo
         const deleteHandler = this.props.deleteStoneItem
-        return <div className='stone'>
-            <div className='stone_img'>
-                <img src="res/stone.png" alt="stone" />
-            </div>
-            <div className='stone_desc'>
-                {stoneInfo.name} with {stoneInfo.age} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]
-                <button onClick={ () => deleteHandler(stoneInfo._id)}>Delete</button>
-            </div>
+        return <div>
+            <Media>
+                <Media.Left>
+                    <Image src="res/stone.png" width={64} height={64} alt="stone" circle />
+                </Media.Left>
+                <Media.Body>
+                    <Media.Heading>
+                        {stoneInfo.name}
+                    </Media.Heading>
+                    <p>{stoneInfo.name} with {stoneInfo.age} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]</p>
+                </Media.Body>
+            </Media>
         </div>
     }
 }

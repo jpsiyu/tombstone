@@ -1,6 +1,5 @@
 import React from 'react'
 import axios from 'axios'
-import './topics.css'
 
 class Topics extends React.Component{
     constructor(){

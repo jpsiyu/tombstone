@@ -1,8 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {BrowserRouter as Router, Route, NavLink as Link} from 'react-router-dom'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {LinkContainer} from 'react-router-bootstrap'
 import './index.css'
 import axios from 'axios'
+import {PageHeader, Nav, NavItem} from 'react-bootstrap'
 
 import {StoneList} from './stone.jsx'
 import {Generate} from './generate.jsx'
@@ -83,14 +85,20 @@ class App extends React.Component{
     render(){
         return <Router>
         <div className="content">
-            <p>Tombstone Record</p>
-            <div className="header">
-                <ul>
-                  <li><Link exact to="/" activeClassName="active">Home</Link></li>
-                  <li><Link to="/generate" activeClassName="active">Generate</Link></li>
-                  <li><Link to="/topics" activeClassName="active">Topics</Link></li>
-                </ul>
-            </div>
+            <PageHeader>
+                Tombstone Record
+            </PageHeader>
+            <Nav bsStyle="tabs">
+                <LinkContainer exact to="/">
+                    <NavItem eventKey={1}>Home</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/generate">
+                    <NavItem eventKey={2}>Generate</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/topics">
+                    <NavItem eventKey={3}>Topics</NavItem>
+                </LinkContainer>
+            </Nav>
 
           <Route exact path="/" component={()=><StoneList fetchData={this.fetchData} deleteStoneItem={this.deleteStoneItem} /> } />
           <Route path="/Generate" component={()=><Generate addStoneItem={this.addStoneItem} /> } />

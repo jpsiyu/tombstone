@@ -8,6 +8,11 @@ const app = express()
 app.use(express.static(path.resolve(__dirname, '../client')))
 app.use(bodyParser.json())
 
+app.get('/bootstrap', (req, res) => {
+    const filePath = path.resolve(__dirname, '../client/bootstrap.html')
+    res.sendFile(filePath)
+})
+
 app.get('/api/stones', (req, res) => {
     db.collection('stones').find().toArray().then(stones => {
         res.type('json')

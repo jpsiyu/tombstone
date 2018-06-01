@@ -1,5 +1,4 @@
 import React from 'react'
-import './generate.css'
 
 class Generate extends React.Component{
     constructor(){
