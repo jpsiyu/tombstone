@@ -1,4 +1,4 @@
-db = new Mongo().getDB('tombstome')
+db = new Mongo().getDB('tombstone')
 db.stones.remove({})
 
 const stones= [
