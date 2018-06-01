@@ -1,12 +1,22 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Button, Row, Col, Image, Grid, Media} from 'react-bootstrap'
+import {
+    Button, 
+    Row, 
+    Col, 
+    Image, 
+    Grid, 
+    Media,
+    ListGroup,
+    ListGroupItem,
+} from 'react-bootstrap'
 
 class Stone extends React.Component{
     render(){
         const stoneInfo = this.props.stoneInfo
         const deleteHandler = this.props.deleteStoneItem
         return <div>
+            <ListGroupItem>
             <Media>
                 <Media.Left>
                     <Image src="res/stone.png" width={64} height={64} alt="stone" circle />
@@ -17,7 +27,11 @@ class Stone extends React.Component{
                     </Media.Heading>
                     <p>{stoneInfo.name} with {stoneInfo.age} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]</p>
                 </Media.Body>
+                <Media.Right>
+                    <Button bsStyle="warning" onClick={() => deleteHandler(stoneInfo._id)}>Delete</Button>
+                </Media.Right>
             </Media>
+            </ListGroupItem>
         </div>
     }
 }
@@ -40,8 +54,10 @@ class StoneList extends React.Component{
         const createStone = item=> {
             return <Stone key={item._id} stoneInfo={item} deleteStoneItem={this.props.deleteStoneItem}/>
         }
-        return <div className='stoneList'>
+        return <div>
+            <ListGroup>
             {this.state.stoneList.map(createStone)}
+            </ListGroup>
         </div>
     }
 }
