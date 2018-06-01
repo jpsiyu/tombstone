@@ -1,10 +1,21 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
+import {
+    Form, 
+    FormControl, 
+    FormGroup, 
+    ControlLabel, 
+    HelpBlock, 
+    Button,
+    Alert,
+} from 'react-bootstrap'
 
 class Generate extends React.Component{
     constructor(){
         super()
         this.onSubmit = this.onSubmit.bind(this)
     }
+
 
     onSubmit(event){
         event.preventDefault()
@@ -21,27 +32,26 @@ class Generate extends React.Component{
     }
 
     render(){
-        return <div className="gen_content">
-            <div className="form_content">
-            <form onSubmit={this.onSubmit} >
-                Name
-                <br />
-                <input className="normal" type="text" required placeholder="name" ref={el => this._nameElement = el}/> 
-                <br />
-                Age
-                <br />
-                <input className="normal" type="number" placeholder="age" ref={el => this._ageElement = el}/> 
-                <br />
-                <br />
-                Location
-                <br />
-                Lng<input className="location" type="number" placeholder="longitude" ref={el => this._lng= el}/> 
-                Lat<input className="location" type="number" placeholder="latitude" ref={el => this._lat= el}/> 
-                <br />
-                <button type="submit"> Sure</button>
-            </form>
-            </div>
-        </div>
+        const help = 'name should not be too long'
+        return <Form onSubmit={this.onSubmit}>
+            <FormGroup controlId="formInlineName">
+                <ControlLabel>Name</ControlLabel>
+                <FormControl type="text" placeholder="enter name" inputRef={ref => this._nameElement=ref} /> 
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Age</ControlLabel>
+                <FormControl type="number" placeholder="enter age" inputRef={ref => this._ageElement=ref}/>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Longitude</ControlLabel>
+                <FormControl type="number" placeholder="enter longitude" inputRef={ ref => this._lng=ref}/>
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Latitude</ControlLabel>
+                <FormControl type="number" placeholder="enter latitude" inputRef={ ref => this._lat=ref}/>
+            </FormGroup>
+            <Button bsStyle="primary" type="submit">Sure</Button>
+        </Form>
     }
 }
 
