@@ -10,6 +10,8 @@ import {
     Alert,
 } from 'react-bootstrap'
 
+import {language} from './language.js'
+
 class Generate extends React.Component{
     constructor(){
         super()
@@ -24,7 +26,7 @@ class Generate extends React.Component{
             this._ageElement.value, 
             [this._lng.value, this._lat.value],
         )
-        alert(this._nameElement.value + ' added')
+        alert(this._nameElement.value + language.generate_added)
         this._nameElement.value = ''
         this._ageElement.value = ''
         this._lng.value = ''
@@ -35,22 +37,22 @@ class Generate extends React.Component{
         const help = 'name should not be too long'
         return <Form onSubmit={this.onSubmit}>
             <FormGroup controlId="formInlineName">
-                <ControlLabel>Name</ControlLabel>
-                <FormControl type="text" placeholder="enter name" inputRef={ref => this._nameElement=ref} /> 
+                <ControlLabel>{language.generate_name}</ControlLabel>
+                <FormControl type="text" placeholder={language.generate_name_enter} inputRef={ref => this._nameElement=ref} /> 
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Age</ControlLabel>
-                <FormControl type="number" placeholder="enter age" inputRef={ref => this._ageElement=ref}/>
+                <ControlLabel>{language.generate_age}</ControlLabel>
+                <FormControl type="number" placeholder={language.generate_age_enter} inputRef={ref => this._ageElement=ref}/>
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Longitude</ControlLabel>
-                <FormControl type="number" placeholder="enter longitude" inputRef={ ref => this._lng=ref}/>
+                <ControlLabel>{language.generate_lng}</ControlLabel>
+                <FormControl type="number" placeholder={language.generate_lng_enter} inputRef={ ref => this._lng=ref}/>
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Latitude</ControlLabel>
-                <FormControl type="number" placeholder="enter latitude" inputRef={ ref => this._lat=ref}/>
+                <ControlLabel>{language.generate_lat}</ControlLabel>
+                <FormControl type="number" placeholder={language.generate_lat_enter} inputRef={ ref => this._lat=ref}/>
             </FormGroup>
-            <Button bsStyle="primary" type="submit">Sure</Button>
+            <Button bsStyle="primary" type="submit">{language.generate_sure}</Button>
         </Form>
     }
 }

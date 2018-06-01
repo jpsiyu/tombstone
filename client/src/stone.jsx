@@ -11,6 +11,8 @@ import {
     ListGroupItem,
 } from 'react-bootstrap'
 
+import {language} from './language.js'
+
 class Stone extends React.Component{
     render(){
         const stoneInfo = this.props.stoneInfo
@@ -25,10 +27,10 @@ class Stone extends React.Component{
                     <Media.Heading>
                         {stoneInfo.name}
                     </Media.Heading>
-                    <p>{stoneInfo.name} with {stoneInfo.age} at location [{stoneInfo.location[0]},{stoneInfo.location[1]}]</p>
+                    <p>{stoneInfo.name}, {language.stone_age}{stoneInfo.age}, {language.stone_location}({stoneInfo.location[0]},{stoneInfo.location[1]})</p>
                 </Media.Body>
                 <Media.Right>
-                    <Button bsStyle="warning" onClick={() => deleteHandler(stoneInfo._id)}>Delete</Button>
+                    <Button bsStyle="warning" onClick={() => deleteHandler(stoneInfo._id)}>{language.stone_delete}</Button>
                 </Media.Right>
             </Media>
             </ListGroupItem>

@@ -10,6 +10,8 @@ import {StoneList} from './stone.jsx'
 import {Generate} from './generate.jsx'
 import {Topics} from './topics.jsx'
 
+import {language} from './language.js'
+
 class App extends React.Component{
     constructor(){
         super()
@@ -86,17 +88,17 @@ class App extends React.Component{
         return <Router>
         <div className="content">
             <PageHeader>
-                Tombstone Record
+                {language.index_title}
             </PageHeader>
             <Nav bsStyle="tabs">
                 <LinkContainer exact to="/">
-                    <NavItem eventKey={1}>Home</NavItem>
+                    <NavItem eventKey={1}>{language.index_home}</NavItem>
                 </LinkContainer>
                 <LinkContainer to="/generate">
-                    <NavItem eventKey={2}>Generate</NavItem>
+                    <NavItem eventKey={2}>{language.index_generate}</NavItem>
                 </LinkContainer>
                 <LinkContainer to="/topics">
-                    <NavItem eventKey={3}>Topics</NavItem>
+                    <NavItem eventKey={3}>{language.index_topics}</NavItem>
                 </LinkContainer>
             </Nav>
 

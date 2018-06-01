@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import {language} from './language.js'
 
 class Topics extends React.Component{
     constructor(){
@@ -7,7 +8,9 @@ class Topics extends React.Component{
     }
 
     render(){
-        return <div>Waiting!</div>
+        return <div> 
+            {language.topics_wait}
+        </div>
     }
 }
 
