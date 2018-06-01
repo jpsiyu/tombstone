@@ -8,6 +8,8 @@ import {
     HelpBlock, 
     Button,
     Alert,
+    Row,
+    Col,
 } from 'react-bootstrap'
 
 import {language} from './language.js'
@@ -35,7 +37,8 @@ class Generate extends React.Component{
 
     render(){
         const help = 'name should not be too long'
-        return <Form onSubmit={this.onSubmit}>
+        return <Row><Col xs={6} sm={3}>
+        <Form onSubmit={this.onSubmit}>
             <FormGroup controlId="formInlineName">
                 <ControlLabel>{language.generate_name}</ControlLabel>
                 <FormControl type="text" placeholder={language.generate_name_enter} inputRef={ref => this._nameElement=ref} /> 
@@ -54,6 +57,7 @@ class Generate extends React.Component{
             </FormGroup>
             <Button bsStyle="primary" type="submit">{language.generate_sure}</Button>
         </Form>
+        </Col></Row>
     }
 }
 

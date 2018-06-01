@@ -86,7 +86,7 @@ class App extends React.Component{
 
     render(){
         return <Router>
-        <div className="content">
+        <div className="container">
             <PageHeader>
                 {language.index_title}
             </PageHeader>

@@ -18,6 +18,8 @@ class Stone extends React.Component{
         const stoneInfo = this.props.stoneInfo
         const deleteHandler = this.props.deleteStoneItem
         return <div>
+            <Row> 
+            <Col sm={12} md={6}>
             <ListGroupItem>
             <Media>
                 <Media.Left>
@@ -34,6 +36,8 @@ class Stone extends React.Component{
                 </Media.Right>
             </Media>
             </ListGroupItem>
+            </Col>
+            </Row>
         </div>
     }
 }
