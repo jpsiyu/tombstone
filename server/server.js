@@ -9,8 +9,8 @@ const app = express()
 app.use(express.static(path.resolve(__dirname, '../client')))
 app.use(bodyParser.json())
 
-app.get('/bootstrap', (req, res) => {
-    const filePath = path.resolve(__dirname, '../client/bootstrap.html')
+app.get('/test', (req, res) => {
+    const filePath = path.resolve(__dirname, '../client/test.html')
     res.sendFile(filePath)
 })
 
