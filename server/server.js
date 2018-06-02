@@ -5,13 +5,36 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const bodyParser = require('body-parser')
 
+const MSG_SERVER_ERROR = 'Internal Server Error'
+
 const app = express()
 app.use(express.static(path.resolve(__dirname, '../client')))
 app.use(bodyParser.json())
 
-app.get('/test', (req, res) => {
-    const filePath = path.resolve(__dirname, '../client/test.html')
+app.get('/register', (req, res) => {
+    const filePath = path.resolve(__dirname, '../client/register.html')
     res.sendFile(filePath)
+})
+
+app.post('/api/register', (req, res) => {
+    const user = req.body
+    const collection = db.collection('user')
+    collection.findOne({name: user.name}).then(result => {
+        if(result !== null){
+            serverMsg(res, 200, false, `${user.name} already exits`, null)
+            return
+        }
+        collection.insertOne(user).then(result => {
+            if(result.insertedId){
+                serverMsg(res, 200, true, `add user ${user.name} success`, null)
+            }else{
+                serverMsg(res, 200, false, `add user ${user.name} failed`, null)
+            }
+        })
+    }).catch(err => {
+        console.log(err)
+        serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
+    })
 })
 
 app.get('/api/stones', (req, res) => {
@@ -48,7 +71,6 @@ app.delete('/api/delete', (req, res) => {
 })
 
 app.use((req, res) => {
-    console.log('404')
     res.type('text/plain')
     res.status(404)
     res.send('404 Not Found')
@@ -60,6 +82,16 @@ app.use( (error, req, res, next) => {
     res.type('text/plain')
     res.send('505 Internal Server Error')
 })
+
+const serverMsg = (res, statusCode, isOk, message, data) => {
+    const m = {
+        ok: isOk,
+        message,
+        data
+    }
+    console.log(m)
+    res.status(statusCode).json(m)
+}
 
 let db
 MongoClient.connect('mongodb://localhost').then(connection => {

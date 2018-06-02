@@ -2,10 +2,13 @@ const webpack = require('webpack')
 const path = require('path')
 
 module.exports = {
-    entry: path.resolve(__dirname, 'client/src/index.jsx'),
+    entry: {
+      app: path.resolve(__dirname, 'client/src/index.jsx'),
+      register: path.resolve(__dirname, 'client/src/register.jsx'), 
+    },
     output: {
-        path: path.resolve(__dirname, 'client'),
-        filename: 'app.bundle.js'
+        path: path.resolve(__dirname, 'client/output'),
+        filename: '[name].bundle.js'
     },
     mode:'development',
     module:{
