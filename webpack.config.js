@@ -5,9 +5,10 @@ module.exports = {
     entry: {
       app: path.resolve(__dirname, 'client/src/index.jsx'),
       register: path.resolve(__dirname, 'client/src/register.jsx'), 
+      login: path.resolve(__dirname, 'client/src/login.jsx'), 
     },
     output: {
-        path: path.resolve(__dirname, 'client/output'),
+        path: path.resolve(__dirname, 'client/public'),
         filename: '[name].bundle.js'
     },
     mode:'development',

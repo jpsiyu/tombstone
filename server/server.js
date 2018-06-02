@@ -6,13 +6,14 @@ const ObjectId = require('mongodb').ObjectId
 const bodyParser = require('body-parser')
 
 const MSG_SERVER_ERROR = 'Internal Server Error'
+const HTML_PATH = '../client/public'
 
 const app = express()
-app.use(express.static(path.resolve(__dirname, '../client')))
+app.use(express.static(path.resolve(__dirname, HTML_PATH)))
 app.use(bodyParser.json())
 
 app.get('/register', (req, res) => {
-    const filePath = path.resolve(__dirname, '../client/register.html')
+    const filePath = path.resolve(__dirname, HTML_PATH, 'register.html')
     res.sendFile(filePath)
 })
 
@@ -31,6 +32,29 @@ app.post('/api/register', (req, res) => {
                 serverMsg(res, 200, false, `add user ${user.name} failed`, null)
             }
         })
+    }).catch(err => {
+        console.log(err)
+        serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
+    })
+})
+
+app.get('/login', (req, res) => {
+    const filePath = path.resolve(__dirname, HTML_PATH, 'login.html')
+    res.sendFile(filePath)
+})
+app.post('/api/login', (req, res) => {
+    const user = req.body
+    const collection = db.collection('user')
+    collection.findOne({name: user.name}).then(result => {
+        if(result === null){
+            serverMsg(res, 200, false, `${user.name} does not exits`, null)
+            return
+        }
+        if(result.password !== user.password){
+            serverMsg(res, 200, false, 'password not match', null)
+            return
+        }
+        serverMsg(res, 200, true, 'login info match', null)
     }).catch(err => {
         console.log(err)
         serverMsg(res, 500, false, MSG_SERVER_ERROR, null)

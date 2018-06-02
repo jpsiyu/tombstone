@@ -10,7 +10,7 @@ import {
 } from 'react-bootstrap'
 import axios from 'axios'
 
-class Register extends React.Component{
+class Login extends React.Component{
     constructor(){
         super()
         this.onSubmit = this.onSubmit.bind(this)
@@ -22,7 +22,7 @@ class Register extends React.Component{
     }
 
     sendToServer(name, password){
-        axios.post('api/register', {
+        axios.post('api/login', {
             name: name,
             password: password,
         }).then(response => {
@@ -37,7 +37,7 @@ class Register extends React.Component{
     render(){
         return <div className="container-fluid">
             <PageHeader>
-                Register
+                Login 
             </PageHeader>
             <Form onSubmit={this.onSubmit}>
             <FormGroup>
@@ -48,13 +48,13 @@ class Register extends React.Component{
                 <ControlLabel>password</ControlLabel>
                 <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
             </FormGroup>
-            <Button bsStyle="primary" type="submit">Sure</Button>
+            <Button bsStyle="primary" type="submit">Login</Button>
             </Form>
         </div>
     }
 }
 
 ReactDOM.render(
-    <Register />,
-    document.getElementById('register')
+    <Login />,
+    document.getElementById('login')
 )
