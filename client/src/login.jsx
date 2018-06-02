@@ -22,13 +22,15 @@ class Login extends React.Component{
     }
 
     sendToServer(name, password){
-        axios.post('api/login', {
+        axios.post('/', {
             name: name,
             password: password,
         }).then(response => {
             if(response.status === 200){
-                console.log('login reponse', response)
                 alert(response.data.message)
+                if(response.data.ok){
+                    window.location = '/main'
+                }
             }else{
                 alert('something wrong')
             }
@@ -50,6 +52,7 @@ class Login extends React.Component{
                 <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
             </FormGroup>
             <Button bsStyle="primary" type="submit">Login</Button>
+            <Button bsStyle="link" href="/register">Register</Button>
             </Form>
         </div>
     }

@@ -37,7 +37,7 @@ app.use(session({
     secret: 'myappistombstonehaha',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true }
+    //cookie: { secure: true }
   }))
 app.use(passport.initialize())
 app.use(passport.session())
@@ -51,7 +51,7 @@ app.get('/register', (req, res) => {
     res.sendFile(filePath)
 })
 
-app.post('/api/register', (req, res) => {
+app.post('/register', (req, res) => {
     const user = {
         name: req.body.name,
         password: req.body.password,
@@ -67,7 +67,9 @@ app.post('/api/register', (req, res) => {
             }
             collection.insertOne(user).then(result => {
                 if(result.insertedId){
-                    serverMsg(res, 200, true, `add user ${user.name} success`, null)
+                    req.login(result.insertedId, err => {
+                        serverMsg(res, 200, true, `add user ${user.name} success`, null)
+                    })
                 }else{
                     serverMsg(res, 200, false, `add user ${user.name} failed`, null)
                 }
@@ -79,21 +81,33 @@ app.post('/api/register', (req, res) => {
     })
 })
 
-app.get('/login', (req, res) => {
-    const filePath = path.resolve(__dirname, HTML_PATH, 'login.html')
-    res.sendFile(filePath)
+app.get('/',  (req, res, next) => {
+    if(req.isAuthenticated()){
+        res.redirect('/main')
+    }else{
+        const filePath = path.resolve(__dirname, HTML_PATH, 'login.html')
+        res.sendFile(filePath)
+
+    }
 })
 
-app.post('/api/login', (req, res, next) => {
+app.post('/', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if(err){
             serverMsg(res, 500, false,  MSG_SERVER_ERROR, null)
         }else if(!user){
             serverMsg(res, 200, false,  info.message, null)
         }else{
-            serverMsg(res, 200, true,  info.message, user)
+            req.login(user._id, err => {
+                serverMsg(res, 200, true,  info.message, user)
+            })
         }
     })(req, res, next)
+})
+
+app.get('/main', (req, res) => {
+    const filePath = path.resolve(__dirname, HTML_PATH, 'main.html')
+    res.sendFile(filePath)
 })
 
 app.get('/api/stones', (req, res) => {
@@ -118,9 +132,15 @@ app.post('/api/stone', (req, res) => {
     })
 })
 
+app.get('/api/logout', (req, res) => {
+    if(req.isAuthenticated())
+        req.logout()
+    serverMsg(res, 200, true, {message: 'logout success'}, null)
+})
+
+
 app.delete('/api/delete', (req, res) => {
     const objId = ObjectId(req.query._id)
-    console.log(req.query._id)
     db.collection('stones').deleteOne({_id: objId}).then(result => {
         if (result.result.ok)
             res.status(200).json({message: 'ok'})
@@ -167,6 +187,16 @@ passport.use(new LocalStrategy(
 
     }
 ))
+
+// serialize to sesstion
+passport.serializeUser(function(userId, done) {
+    console.log('serialzie', userId)
+    done(null, userId);
+});
+  
+passport.deserializeUser(function(userId, done) {
+    done(null, userId)
+});
 
 
 

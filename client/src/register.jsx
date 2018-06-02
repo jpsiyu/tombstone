@@ -22,12 +22,15 @@ class Register extends React.Component{
     }
 
     sendToServer(name, password){
-        axios.post('api/register', {
+        axios.post('/register', {
             name: name,
             password: password,
         }).then(response => {
             if(response.status === 200){
                 alert(response.data.message)
+                if(response.data.ok){
+                    window.location = '/main'
+                }
             }else{
                 alert('something wrong')
             }

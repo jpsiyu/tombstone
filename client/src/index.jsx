@@ -4,7 +4,7 @@ import {HashRouter as Router, Route} from 'react-router-dom'
 import {LinkContainer} from 'react-router-bootstrap'
 import './index.css'
 import axios from 'axios'
-import {PageHeader, Nav, NavItem} from 'react-bootstrap'
+import {PageHeader, Nav, NavItem, Button} from 'react-bootstrap'
 
 import {StoneList} from './stone.jsx'
 import {Generate} from './generate.jsx'
@@ -21,6 +21,7 @@ class App extends React.Component{
         this.fetchData = this.fetchData.bind(this)
         this.addStoneItem = this.addStoneItem.bind(this)
         this.deleteStoneItem = this.deleteStoneItem.bind(this)
+        this.logout = this.logout.bind(this)
     }
 
     fetchData(){
@@ -80,6 +81,15 @@ class App extends React.Component{
         })
     }
 
+    logout(){
+        axios.get('/api/logout').then(response => {
+            const serverMsg = response.data
+            if(serverMsg.ok){
+                window.location = '/'
+            }
+        })
+    }
+
     componentWillMount(){
         this.fetchServer()
     }
@@ -90,6 +100,7 @@ class App extends React.Component{
             <PageHeader>
                 {language.index_title}
             </PageHeader>
+            <Button bsStyle='warning' onClick={this.logout}>Logout</Button>
             <Nav bsStyle="tabs">
                 <LinkContainer exact to="/">
                     <NavItem eventKey={1}>{language.index_home}</NavItem>
