@@ -4,9 +4,11 @@ const path = require('path')
 const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
 
 const MSG_SERVER_ERROR = 'Internal Server Error'
 const HTML_PATH = '../client/public'
+const saltRounds = 10
 
 const app = express()
 app.use(express.static(path.resolve(__dirname, HTML_PATH)))
@@ -18,23 +20,30 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/api/register', (req, res) => {
-    const user = req.body
-    const collection = db.collection('user')
-    collection.findOne({name: user.name}).then(result => {
-        if(result !== null){
-            serverMsg(res, 200, false, `${user.name} already exits`, null)
-            return
-        }
-        collection.insertOne(user).then(result => {
-            if(result.insertedId){
-                serverMsg(res, 200, true, `add user ${user.name} success`, null)
-            }else{
-                serverMsg(res, 200, false, `add user ${user.name} failed`, null)
+    const user = {
+        name: req.body.name,
+        password: req.body.password,
+    }
+    bcrypt.hash(user.password, saltRounds, (err, hash) => {
+        user.password = hash
+
+        const collection = db.collection('user')
+        collection.findOne({name: user.name}).then(result => {
+            if(result !== null){
+                serverMsg(res, 200, false, `${user.name} already exits`, null)
+                return
             }
+            collection.insertOne(user).then(result => {
+                if(result.insertedId){
+                    serverMsg(res, 200, true, `add user ${user.name} success`, null)
+                }else{
+                    serverMsg(res, 200, false, `add user ${user.name} failed`, null)
+                }
+            })
+        }).catch(err => {
+            console.log(err)
+            serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
         })
-    }).catch(err => {
-        console.log(err)
-        serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
     })
 })
 
@@ -50,11 +59,14 @@ app.post('/api/login', (req, res) => {
             serverMsg(res, 200, false, `${user.name} does not exits`, null)
             return
         }
-        if(result.password !== user.password){
-            serverMsg(res, 200, false, 'password not match', null)
-            return
-        }
-        serverMsg(res, 200, true, 'login info match', null)
+        bcrypt.compare(user.password, result.password, (err, compareResult) => {
+            console.log(user.password, result.password, compareResult)
+            if(compareResult !== true){
+                serverMsg(res, 200, false, 'password not match', null)
+            }else{
+                serverMsg(res, 200, true, 'login info match', null)
+            }
+        })
     }).catch(err => {
         console.log(err)
         serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
