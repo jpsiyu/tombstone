@@ -106,8 +106,12 @@ app.post('/', (req, res, next) => {
 })
 
 app.get('/main', (req, res) => {
-    const filePath = path.resolve(__dirname, HTML_PATH, 'main.html')
-    res.sendFile(filePath)
+    if(req.isAuthenticated()){
+        const filePath = path.resolve(__dirname, HTML_PATH, 'main.html')
+        res.sendFile(filePath)
+    }else{
+        res.redirect('/')
+    }
 })
 
 app.get('/api/stones', (req, res) => {
@@ -190,7 +194,6 @@ passport.use(new LocalStrategy(
 
 // serialize to sesstion
 passport.serializeUser(function(userId, done) {
-    console.log('serialzie', userId)
     done(null, userId);
 });
   
