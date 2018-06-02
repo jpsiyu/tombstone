@@ -27,6 +27,7 @@ class Login extends React.Component{
             password: password,
         }).then(response => {
             if(response.status === 200){
+                console.log('login reponse', response)
                 alert(response.data.message)
             }else{
                 alert('something wrong')

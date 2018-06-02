@@ -5,15 +5,47 @@ const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
 const bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
+const cookieParser = require('cookie-parser')
+const session = require('express-session')
+const passport = require('passport')
+const LocalStrategy = require('passport-local').Strategy
+const flash = require('connect-flash')
+const morgan = require('morgan')
 
+// constant info
 const MSG_SERVER_ERROR = 'Internal Server Error'
 const HTML_PATH = '../client/public'
 const saltRounds = 10
 
+const serverMsg = (res, statusCode, isOk, message, data) => {
+    const m = {
+        ok: isOk,
+        message,
+        data
+    }
+    console.log(m)
+    res.status(statusCode).json(m)
+}
+
+
+// app and middlewares 
 const app = express()
 app.use(express.static(path.resolve(__dirname, HTML_PATH)))
 app.use(bodyParser.json())
+app.use(cookieParser())
+app.use(session({
+    secret: 'myappistombstonehaha',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true }
+  }))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(flash())
+app.use(morgan('tiny'))
 
+
+// routes
 app.get('/register', (req, res) => {
     const filePath = path.resolve(__dirname, HTML_PATH, 'register.html')
     res.sendFile(filePath)
@@ -51,26 +83,17 @@ app.get('/login', (req, res) => {
     const filePath = path.resolve(__dirname, HTML_PATH, 'login.html')
     res.sendFile(filePath)
 })
-app.post('/api/login', (req, res) => {
-    const user = req.body
-    const collection = db.collection('user')
-    collection.findOne({name: user.name}).then(result => {
-        if(result === null){
-            serverMsg(res, 200, false, `${user.name} does not exits`, null)
-            return
+
+app.post('/api/login', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if(err){
+            serverMsg(res, 500, false,  MSG_SERVER_ERROR, null)
+        }else if(!user){
+            serverMsg(res, 200, false,  info.message, null)
+        }else{
+            serverMsg(res, 200, true,  info.message, user)
         }
-        bcrypt.compare(user.password, result.password, (err, compareResult) => {
-            console.log(user.password, result.password, compareResult)
-            if(compareResult !== true){
-                serverMsg(res, 200, false, 'password not match', null)
-            }else{
-                serverMsg(res, 200, true, 'login info match', null)
-            }
-        })
-    }).catch(err => {
-        console.log(err)
-        serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
-    })
+    })(req, res, next)
 })
 
 app.get('/api/stones', (req, res) => {
@@ -119,15 +142,33 @@ app.use( (error, req, res, next) => {
     res.send('505 Internal Server Error')
 })
 
-const serverMsg = (res, statusCode, isOk, message, data) => {
-    const m = {
-        ok: isOk,
-        message,
-        data
+// passport
+passport.use(new LocalStrategy(
+    {
+        usernameField: 'name',
+        passwordField: 'password',
+    },
+    (name, password, done) => {
+        const collection = db.collection('user')
+        collection.findOne({name:name}).then(user => {
+            if(user === null){
+                return done(null, false, {message: 'no user'})
+            }
+            bcrypt.compare(password, user.password, (err, compareResult) => {
+                if(compareResult !== true){
+                    return done(null, false, {message: 'wrong password'})
+                }else{
+                    return done(null, user, {message: 'login success'})
+                }
+            })
+        }).catch(err => {
+            return done(err)
+        })
+
     }
-    console.log(m)
-    res.status(statusCode).json(m)
-}
+))
+
+
 
 let db
 MongoClient.connect('mongodb://localhost').then(connection => {
