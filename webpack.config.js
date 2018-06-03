@@ -3,7 +3,7 @@ const path = require('path')
 
 module.exports = {
     entry: {
-      app: path.resolve(__dirname, 'client/src/index.jsx'),
+      main: path.resolve(__dirname, 'client/src/main.jsx'),
       register: path.resolve(__dirname, 'client/src/register.jsx'), 
       login: path.resolve(__dirname, 'client/src/login.jsx'), 
     },

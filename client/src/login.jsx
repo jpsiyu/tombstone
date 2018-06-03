@@ -7,8 +7,13 @@ import {
     FormControl,
     ControlLabel,
     Button,
+    Row,
+    Col,
+    Jumbotron,
+    Image,
 } from 'react-bootstrap'
 import axios from 'axios'
+
 
 class Login extends React.Component{
     constructor(){
@@ -22,7 +27,7 @@ class Login extends React.Component{
     }
 
     sendToServer(name, password){
-        axios.post('/', {
+        axios.post('/login', {
             name: name,
             password: password,
         }).then(response => {
@@ -38,22 +43,36 @@ class Login extends React.Component{
     }
 
     render(){
-        return <div className="container-fluid">
-            <PageHeader>
-                Login 
-            </PageHeader>
-            <Form onSubmit={this.onSubmit}>
-            <FormGroup>
-                <ControlLabel>username</ControlLabel>
-                <FormControl type="text" placeholder="username" inputRef={ref => this._username=ref} /> 
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>password</ControlLabel>
-                <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
-            </FormGroup>
-            <Button bsStyle="primary" type="submit">Login</Button>
-            <Button bsStyle="link" href="/register">Register</Button>
-            </Form>
+        const imgStyle = {
+            display: 'block',
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            width: 64,
+            height: 64,
+        }
+        const textStyle = {
+            textAlign: 'center'
+        }
+        return <div>
+            <Row>
+            <Col sm={4} smOffset={4}>
+                <Image src='/res/stone.png' circle style={imgStyle}/>
+                <h4 style={textStyle}>Sign in to Tombstone</h4>
+                <Jumbotron className="container-fluid">
+                <Form onSubmit={this.onSubmit}>
+                <FormGroup>
+                    <ControlLabel>username</ControlLabel>
+                    <FormControl type="text" placeholder="username" inputRef={ref => this._username=ref} /> 
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>password</ControlLabel>
+                    <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
+                </FormGroup>
+                <Button bsStyle="primary" type="submit">Login</Button>
+                </Form>
+                </Jumbotron>
+            </Col>
+            </Row>
         </div>
     }
 }

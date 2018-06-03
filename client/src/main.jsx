@@ -2,7 +2,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {HashRouter as Router, Route} from 'react-router-dom'
 import {LinkContainer} from 'react-router-bootstrap'
-import './index.css'
 import axios from 'axios'
 import {PageHeader, Nav, NavItem, Button} from 'react-bootstrap'
 
@@ -11,6 +10,7 @@ import {Generate} from './generate.jsx'
 import {Topics} from './topics.jsx'
 
 import {language} from './language.js'
+import {Navigation} from './navigation.jsx'
 
 class App extends React.Component{
     constructor(){
@@ -96,11 +96,9 @@ class App extends React.Component{
 
     render(){
         return <Router>
-        <div className="container">
-            <PageHeader>
-                {language.index_title}
-            </PageHeader>
-            <Button bsStyle='warning' onClick={this.logout}>Logout</Button>
+        <div >
+            <Navigation />
+            <div className="container">
             <Nav bsStyle="tabs">
                 <LinkContainer exact to="/">
                     <NavItem eventKey={1}>{language.index_home}</NavItem>
@@ -116,6 +114,7 @@ class App extends React.Component{
           <Route exact path="/" component={()=><StoneList fetchData={this.fetchData} deleteStoneItem={this.deleteStoneItem} /> } />
           <Route path="/Generate" component={()=><Generate addStoneItem={this.addStoneItem} /> } />
           <Route path="/topics" component={Topics} />
+          </div>
         </div>
       </Router>
     }

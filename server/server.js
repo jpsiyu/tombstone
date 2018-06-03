@@ -46,7 +46,7 @@ app.use(morgan('tiny'))
 
 
 // routes
-app.get('/register', (req, res) => {
+app.get('/', (req, res) => {
     const filePath = path.resolve(__dirname, HTML_PATH, 'register.html')
     res.sendFile(filePath)
 })
@@ -81,7 +81,7 @@ app.post('/register', (req, res) => {
     })
 })
 
-app.get('/',  (req, res, next) => {
+app.get('/login',  (req, res, next) => {
     if(req.isAuthenticated()){
         res.redirect('/main')
     }else{
@@ -91,7 +91,7 @@ app.get('/',  (req, res, next) => {
     }
 })
 
-app.post('/', (req, res, next) => {
+app.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if(err){
             serverMsg(res, 500, false,  MSG_SERVER_ERROR, null)
@@ -103,6 +103,12 @@ app.post('/', (req, res, next) => {
             })
         }
     })(req, res, next)
+})
+
+app.get('/logout', (req, res) => {
+    if(req.isAuthenticated())
+        req.logout()
+    res.redirect('/')
 })
 
 app.get('/main', (req, res) => {
@@ -134,12 +140,6 @@ app.post('/api/stone', (req, res) => {
         console.log(err)
         res.status(500).json({message: 'Internal Server Error'})
     })
-})
-
-app.get('/api/logout', (req, res) => {
-    if(req.isAuthenticated())
-        req.logout()
-    serverMsg(res, 200, true, {message: 'logout success'}, null)
 })
 
 
