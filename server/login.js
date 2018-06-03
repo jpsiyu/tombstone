@@ -57,9 +57,9 @@ const postRegister = (req, res, database) => {
                 common.serverMsg(res, 200, false, `add user ${user.username} failed`, null)
             } 
         }
-        const findUserCallback = user => {
-            if(user !== null){
-                common.serverMsg(res, 200, false, `${user.username} already exits`, null)
+        const findUserCallback = db_user => {
+            if(db_user !== null){
+                common.serverMsg(res, 200, false, `${db_user.username} already exits`, null)
                 return
             }
             database.insertUser(user, insertUserCallback, errCallback)
