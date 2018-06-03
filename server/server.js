@@ -11,6 +11,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const flash = require('connect-flash')
 const morgan = require('morgan')
+const Database = require('./database.js')
 
 // constant info
 const MSG_SERVER_ERROR = 'Internal Server Error'
@@ -26,6 +27,7 @@ const serverMsg = (res, statusCode, isOk, message, data) => {
     console.log(m)
     res.status(statusCode).json(m)
 }
+const serverErrMsg = res => serverMsg(res, 500, false,  MSG_SERVER_ERROR, null) 
 
 
 // app and middlewares 
@@ -58,26 +60,24 @@ app.post('/register', (req, res) => {
     }
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
         user.password = hash
-
-        const collection = db.collection('user')
-        collection.findOne({name: user.name}).then(result => {
+        const errCallback = () => serverErrMsg(res)
+        const insertUserCallback = result => {
+            if(result.insertedId){
+                req.login(result.insertedId, err => {
+                    serverMsg(res, 200, true, `add user ${user.name} success`, null)
+                })
+            }else{
+                serverMsg(res, 200, false, `add user ${user.name} failed`, null)
+            } 
+        }
+        const findUserCallback = result => {
             if(result !== null){
                 serverMsg(res, 200, false, `${user.name} already exits`, null)
                 return
             }
-            collection.insertOne(user).then(result => {
-                if(result.insertedId){
-                    req.login(result.insertedId, err => {
-                        serverMsg(res, 200, true, `add user ${user.name} success`, null)
-                    })
-                }else{
-                    serverMsg(res, 200, false, `add user ${user.name} failed`, null)
-                }
-            })
-        }).catch(err => {
-            console.log(err)
-            serverMsg(res, 500, false, MSG_SERVER_ERROR, null)
-        })
+            database.insertUser(user, insertUserCallback, errCallback)
+        }
+        database.findUserByName(user.name, findUserCallback, errCallback)
     })
 })
 
@@ -121,36 +121,25 @@ app.get('/main', (req, res) => {
 })
 
 app.get('/api/stones', (req, res) => {
-    db.collection('stones').find().toArray().then(stones => {
-        res.type('json')
-        res.json(stones)
-    }).catch(err => {
-        console.log(err)
-        res.status(500).json({message: 'Internal Server Error'})
-    })
+    const fetchSucc = stones => res.json(stones)
+    database.fetchStones(fetchSucc, serverErrMsg)
 })
 
 app.post('/api/stone', (req, res) => {
     const stone = req.body
-    db.collection('stones').insertOne(stone).then(result => {
-        return db.collection('stones').findOne({_id: result.insertedId})
-    }).then(newStone => {
-        res.json(stone)
-    }).catch(err => {
-        console.log(err)
-        res.status(500).json({message: 'Internal Server Error'})
-    })
+    const findCallback = newStone => res.json(newStone)
+    const insertCallback = result => {
+        if(result && result.insertedId)
+            database.findStoneById(result.insertedId, findCallback, serverErrMsg)
+    }
+    database.insertStone(stone, insertCallback, serverErrMsg)
 })
 
 
 app.delete('/api/delete', (req, res) => {
-    const objId = ObjectId(req.query._id)
-    db.collection('stones').deleteOne({_id: objId}).then(result => {
-        if (result.result.ok)
-            res.status(200).json({message: 'ok'})
-        else
-            res.status(500).json({message: 'Internal Server Error'})
-    })
+    const id = ObjectId(req.query._id)
+    const deleteSucc = () => serverMsg(res, 200, true, {message: 'ok'}, null)
+    database.deleteStoneById(id, deleteSucc, serverErrMsg)
 })
 
 app.use((req, res) => {
@@ -173,22 +162,19 @@ passport.use(new LocalStrategy(
         passwordField: 'password',
     },
     (name, password, done) => {
-        const collection = db.collection('user')
-        collection.findOne({name:name}).then(user => {
+        const findUserCallback = user => {
             if(user === null){
-                return done(null, false, {message: 'no user'})
+                done(null, false, {message: 'no user'})
             }
             bcrypt.compare(password, user.password, (err, compareResult) => {
                 if(compareResult !== true){
-                    return done(null, false, {message: 'wrong password'})
+                    done(null, false, {message: 'wrong password'})
                 }else{
-                    return done(null, user, {message: 'login success'})
+                    done(null, user, {message: 'login success'})
                 }
-            })
-        }).catch(err => {
-            return done(err)
-        })
-
+            }).catch( err => done(err))
+        }
+        database.findUserByName(name, findUserCallback)
     }
 ))
 
@@ -204,9 +190,8 @@ passport.deserializeUser(function(userId, done) {
 
 
 let db
-MongoClient.connect('mongodb://localhost').then(connection => {
-    db = connection.db('tombstone')
+const database = new Database()
+database.connect( () => {
     app.listen(3000, () => console.log('server listening on 3000'))
-}).catch(error => {
-    console.log('ERR', error)
+    db = database.db
 })
