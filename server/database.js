@@ -1,12 +1,11 @@
 const MongoClient = require('mongodb').MongoClient
 const ObjectId = require('mongodb').ObjectId
+const mongoose = require('mongoose')
 
 class Database {
 
     constructor(){
         this.db = null
-        this.userCollection = null
-        this.stonesCollection = null
     }
 
     err(err, errCallback){
@@ -17,56 +16,93 @@ class Database {
 
     // connect to database
     connect(callback){
-        MongoClient.connect('mongodb://localhost').then(connection => {
-            this.db = connection.db('tombstone')
-            this.userCollection = this.db.collection('user')
-            this.stonesCollection = this.db.collection('stones')
+        mongoose.connect('mongodb://localhost/tombstone')
+        this.db = mongoose.connection
+        this.db.on('error', err => this.err(err))
+        this.db.on('open', () => {
             callback()
-        }).catch(err => this.err(err))
+        })
     }
 
     // find user by name
-    findUserByName(name, callback, errCallback){
-        this.userCollection.findOne({name})
-            .then( user => callback(user))
-            .catch(err => this.err(err, errCallback))
+    findUserByName(username, callback, errCallback){
+        User.findOne({username}, (err, user) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback(user)
+        })
     }
 
     // insert user
     insertUser(user, callback, errCallback){
-        this.userCollection.insertOne(user)
-            .then( result => callback(result))
-            .catch( err => this.err(err, errCallback))
+        user.save( (err, user) => {
+            if (err)
+                this.err(err, errCallback)
+            else
+                callback(user)
+        })
     }
 
     // fetch stones
     fetchStones(callback, errCallback){
-        this.stonesCollection.find().toArray()
-            .then(stones => callback(stones))
-            .catch( err => this.err(err, errCallback))
+        Stone.find( (err, stones) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback(stones)
+        } )
     }
 
     // insert stone
     insertStone(stone, callback, errCallback){
-        this.stonesCollection.insertOne(stone)
-            .then(result => callback(result))
-            .catch(err => this.err(err, errCallback))
+        stone.save( (err, stone) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback(stone)
+        })
     }
 
     // find stone by id
     findStoneById(id, callback, errCallback){
-        this.stonesCollection.findOne({_id: id})
-            .then(stone => callback(stone))
-            .catch(err => this.err(err, errCallback))
+        Stone.findById(id, (err, stone) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback(stone)
+        })
     }
 
     //delte stone by id
     deleteStoneById(id, callback, errCallback){
         const objId = ObjectId(id)
-        this.stonesCollection.deleteOne({_id: objId})
-            .then(result => callback(result))
-            .catch(err => this.err(err, errCallback))
+        Stone.remove({_id: id}, (err) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback()
+
+        })
     }
 }
 
-module.exports = Database
+const userSchema = mongoose.Schema({
+    username: String,
+    email: String,
+    password: String,
+})
+
+const stoneSchema = mongoose.Schema({
+    name: String,
+    age: Number,
+    location: [Number],
+})
+const User = mongoose.model('User', userSchema)
+const Stone = mongoose.model('Stone', stoneSchema)
+
+module.exports = {
+    Database,
+    User,
+    Stone,
+}

@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const passport = require('passport')
 const common = require('./common.js')
 const path = require('path')
+const {User, Stone} = require('./database.js')
 
 const saltRounds = 10
 
@@ -29,12 +30,12 @@ const postLogin = (req, res, next, passport) => {
 }
 
 const postRegister = (req, res, database) => {
-    const user = {
-        name: req.body.name,
+    const user = new User({
+        username: req.body.username,
         email: req.body.email,
         password: req.body.password,
-    }
-    req.check('name', 'name length: [4, 20]').isLength({min: 4, max: 20})
+    })
+    req.check('username', 'username length: [4, 20]').isLength({min: 4, max: 20})
     req.check('email', 'shoule match email fromat').isEmail().normalizeEmail()
     req.check('password', 'password length: [4,20]').isLength({min:6, max:20})
     const err = req.validationErrors()
@@ -47,23 +48,23 @@ const postRegister = (req, res, database) => {
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
         user.password = hash
         const errCallback = () => common.serverErrMsg(res)
-        const insertUserCallback = result => {
-            if(result.insertedId){
-                req.login(result.insertedId, err => {
-                    common.serverMsg(res, 200, true, `add user ${user.name} success`, null)
+        const insertUserCallback = user => {
+            if(user){
+                req.login(user._id, err => {
+                    common.serverMsg(res, 200, true, `add user ${user.username} success`, null)
                 })
             }else{
-                common.serverMsg(res, 200, false, `add user ${user.name} failed`, null)
+                common.serverMsg(res, 200, false, `add user ${user.username} failed`, null)
             } 
         }
-        const findUserCallback = result => {
-            if(result !== null){
-                common.serverMsg(res, 200, false, `${user.name} already exits`, null)
+        const findUserCallback = user => {
+            if(user !== null){
+                common.serverMsg(res, 200, false, `${user.username} already exits`, null)
                 return
             }
             database.insertUser(user, insertUserCallback, errCallback)
         }
-        database.findUserByName(user.name, findUserCallback, errCallback)
+        database.findUserByName(user.username, findUserCallback, errCallback)
     })
 }
 

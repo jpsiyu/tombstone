@@ -1,4 +1,5 @@
 const common = require('./common.js')
+const {Stone} = require('./database.js')
 
 const getStones = (req, res, database) => {
     const fetchSucc = stones => res.json(stones)
@@ -6,11 +7,10 @@ const getStones = (req, res, database) => {
 }
 
 const addStone = (req, res, database) => {
-    const stone = req.body
-    const findCallback = newStone => res.json(newStone)
-    const insertCallback = result => {
-        if(result && result.insertedId)
-            database.findStoneById(result.insertedId, findCallback, ()=>common.serverErrMsg(res))
+    const stone = new Stone(req.body)
+    const insertCallback = stone => {
+        if(stone)
+            res.json(stone)
     }
     database.insertStone(stone, insertCallback, ()=>common.serverErrMsg(res))
 }

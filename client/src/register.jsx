@@ -26,11 +26,11 @@ class Register extends React.Component{
         this.sendToServer(this._username.value, this._email.value, this._passwd.value)
     }
 
-    sendToServer(name, email, password){
+    sendToServer(username, email, password){
         axios.post('/register', {
-            name: name,
-            email: email,
-            password: password,
+            username,
+            email,
+            password,
         }).then(response => {
             if(response.status === 200){
                 alert(response.data.message)

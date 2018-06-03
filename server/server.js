@@ -10,7 +10,7 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const flash = require('connect-flash')
 const morgan = require('morgan')
-const Database = require('./database.js')
+const {Database} = require('./database.js')
 const common = require('./common.js')
 const login = require('./login.js')
 const stone = require('./stone.js')
@@ -92,10 +92,6 @@ app.use( (error, req, res, next) => {
 
 // passport
 passport.use(new LocalStrategy(
-    {
-        usernameField: 'name',
-        passwordField: 'password',
-    },
     (name, password, done) => login.loginMatch(name, password, done, database)
 ))
 
