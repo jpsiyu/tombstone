@@ -31,8 +31,19 @@ const postLogin = (req, res, next, passport) => {
 const postRegister = (req, res, database) => {
     const user = {
         name: req.body.name,
+        email: req.body.email,
         password: req.body.password,
     }
+    req.check('name', 'name length: [4, 20]').isLength({min: 4, max: 20})
+    req.check('email', 'shoule match email fromat').isEmail().normalizeEmail()
+    req.check('password', 'password length: [4,20]').isLength({min:6, max:20})
+    const err = req.validationErrors()
+    if(err){
+        console.log("check err:", err)
+        common.serverMsg(res, 200, false, JSON.stringify(err), null)
+        return 
+    }
+
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
         user.password = hash
         const errCallback = () => common.serverErrMsg(res)

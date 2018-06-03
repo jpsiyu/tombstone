@@ -1,5 +1,6 @@
 'use strict'
 const express = require('express')
+const expressValidator = require('express-validator')
 const path = require('path')
 const bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
@@ -29,6 +30,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 app.use(flash())
 app.use(morgan('tiny'))
+app.use(expressValidator())
 
 
 // routes

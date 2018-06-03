@@ -23,12 +23,13 @@ class Register extends React.Component{
 
     onSubmit(event){
         event.preventDefault()
-        this.sendToServer(this._username.value, this._passwd.value)
+        this.sendToServer(this._username.value, this._email.value, this._passwd.value)
     }
 
-    sendToServer(name, password){
+    sendToServer(name, email, password){
         axios.post('/register', {
             name: name,
+            email: email,
             password: password,
         }).then(response => {
             if(response.status === 200){
@@ -67,6 +68,10 @@ class Register extends React.Component{
                         <FormGroup>
                             <ControlLabel>username</ControlLabel>
                             <FormControl type="text" placeholder="username" inputRef={ref => this._username=ref} /> 
+                        </FormGroup>
+                        <FormGroup>
+                            <ControlLabel>email</ControlLabel>
+                            <FormControl type="email" placeholder="email" inputRef={ref => this._email=ref} /> 
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>password</ControlLabel>

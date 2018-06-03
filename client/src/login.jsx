@@ -26,9 +26,9 @@ class Login extends React.Component{
         this.sendToServer(this._username.value, this._passwd.value)
     }
 
-    sendToServer(name, password){
+    sendToServer(username, password){
         axios.post('/login', {
-            name: name,
+            name: username,
             password: password,
         }).then(response => {
             if(response.status === 200){
