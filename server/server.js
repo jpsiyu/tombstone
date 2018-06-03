@@ -1,4 +1,3 @@
-'use strict'
 const express = require('express')
 const expressValidator = require('express-validator')
 const path = require('path')
