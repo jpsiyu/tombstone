@@ -62,9 +62,29 @@ const getLogout = (req, res) => {
     res.redirect('/')
 }
 
+const loginMatch = (name, password, done, database) => {
+    const findUserCallback = user => {
+        if(user === null){
+            return done(null, false, {message: 'no user'})
+        }
+        bcrypt.compare(password, user.password, (err, compareResult) => {
+            if(err){
+                return done(err)
+            }
+            if(compareResult !== true){
+                return done(null, false, {message: 'wrong password'})
+            }else{
+                return done(null, user, {message: 'login success'})
+            }
+        })
+    }
+    database.findUserByName(name, findUserCallback)
+}
+
 module.exports = {
     getLogin,
     postLogin,
     postRegister,
     getLogout,
+    loginMatch,
 }

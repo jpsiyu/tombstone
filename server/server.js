@@ -94,24 +94,9 @@ passport.use(new LocalStrategy(
         usernameField: 'name',
         passwordField: 'password',
     },
-    (name, password, done) => {
-        const findUserCallback = user => {
-            if(user === null){
-                done(null, false, {message: 'no user'})
-            }
-            bcrypt.compare(password, user.password, (err, compareResult) => {
-                if(compareResult !== true){
-                    done(null, false, {message: 'wrong password'})
-                }else{
-                    done(null, user, {message: 'login success'})
-                }
-            }).catch( err => done(err))
-        }
-        database.findUserByName(name, findUserCallback)
-    }
+    (name, password, done) => login.loginMatch(name, password, done, database)
 ))
 
-// serialize to sesstion
 passport.serializeUser(function(userId, done) {
     done(null, userId);
 });
