@@ -5,6 +5,7 @@ import {
     NavItem,
     Image,
 } from 'react-bootstrap'
+import {language} from './language.js'
 
 class Navigation extends React.Component{
     render(){
@@ -17,13 +18,11 @@ class Navigation extends React.Component{
             </Navbar.Header>
                 <Navbar.Collapse>
                 <Nav>
-                    <NavItem eventKey={1} href="#">StoneList</NavItem>
-                    <NavItem eventKey={2} href="#">Generate</NavItem>
-                    <NavItem eventKey={3} href="#">Topics</NavItem>
+                    <NavItem eventKey={3} href="#">{language.topics}</NavItem>
                 </Nav>
                 <Nav pullRight>
-                    <NavItem eventKey={1} href="/login">login</NavItem>
-                    <NavItem eventKey={2} href="/logout">logout</NavItem>
+                    <NavItem eventKey={1} href="/login">{language.sign_in}</NavItem>
+                    <NavItem eventKey={2} href="/logout">{language.sign_out}</NavItem>
                 </Nav>
                 </Navbar.Collapse>
         </Navbar>

@@ -29,22 +29,32 @@ const postLogin = (req, res, next, passport) => {
     })(req, res, next)
 }
 
+const checkRegisterInfo = req => {
+    req.check('username', 'username len: 4~20').isLength({min:4, max:20})
+    req.check('username', 'username should be alpha').isAlpha()
+    req.check('email', 'email fromat err').isEmail().normalizeEmail()
+    req.check('password', 'password len: [6,20]').isLength({min:6, max:20})
+    req.check('password', 'password shoule be alpah or number').isAlphanumeric()
+    const err = req.validationErrors()
+    if(err){
+        let msg = ''
+        err.map( e => msg = `${msg}\n${e.msg}`)
+        return {res:false, msg:msg}
+    }
+    return {res:true, msg:'ok'}
+}
+
 const postRegister = (req, res, database) => {
     const user = new User({
         username: req.body.username,
         email: req.body.email,
         password: req.body.password,
     })
-    req.check('username', 'username length: [4, 20]').isLength({min: 4, max: 20})
-    req.check('email', 'shoule match email fromat').isEmail().normalizeEmail()
-    req.check('password', 'password length: [4,20]').isLength({min:6, max:20})
-    const err = req.validationErrors()
-    if(err){
-        console.log("check err:", err)
-        common.serverMsg(res, 200, false, JSON.stringify(err), null)
-        return 
+    const checkRes = checkRegisterInfo(req)
+    if(!checkRes.res){
+        common.serverMsg(res, 200, false, checkRes.msg, null)
+        return
     }
-
     bcrypt.hash(user.password, saltRounds, (err, hash) => {
         user.password = hash
         const errCallback = () => common.serverErrMsg(res)

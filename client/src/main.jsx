@@ -59,22 +59,30 @@ class App extends React.Component{
         })
     }
 
-    addStoneItem(name, age, location){
+    addStoneItem(name, age, location, successCallback){
         axios.post('/api/stone', {
             name: name,
             location: location,
             age: age
         }).then(response => {
             if(response.status === 200){
-                response.data
-                const item = { 
-                    _id: response.data._id,
-                    name: response.data.name, 
-                    age: response.data.age,
-                    location: response.data.location,
+                const serverMsg = response.data
+                console.log('addstoneitem', serverMsg)
+                if(serverMsg.ok){
+                    const stoneInfo = serverMsg.data
+                    const item = { 
+                        _id: stoneInfo._id,
+                        name: stoneInfo.name, 
+                        age: stoneInfo.age,
+                        location: stoneInfo.location,
+                    }
+                    this.state.stoneList.push(item)
+                    this.setState({stoneList: this.state.stoneList})
+                    alert(`${name} ${language.generate_added}`)
+                    successCallback()
+                }else{
+                    alert(serverMsg.message)
                 }
-                this.state.stoneList.push(item)
-                this.setState({stoneList: this.state.stoneList})
             }
         }).catch(err => {
             console.log(err)

@@ -23,16 +23,18 @@ class Generate extends React.Component{
 
     onSubmit(event){
         event.preventDefault()
+        const successFn = () => {
+            this._nameElement.value = ''
+            this._ageElement.value = ''
+            this._lng.value = ''
+            this._lat.value = ''
+        }
         this.props.addStoneItem(
             this._nameElement.value, 
             this._ageElement.value, 
             [this._lng.value, this._lat.value],
+            successFn,
         )
-        alert(this._nameElement.value + language.generate_added)
-        this._nameElement.value = ''
-        this._ageElement.value = ''
-        this._lng.value = ''
-        this._lat.value = ''
     }
 
     render(){

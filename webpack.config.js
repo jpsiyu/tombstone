@@ -11,7 +11,7 @@ module.exports = {
         path: path.resolve(__dirname, 'client/public/bundle'),
         filename: '[name].bundle.js',
     },
-    mode:'production',
+    mode:'development',
     module:{
       rules:[
         {

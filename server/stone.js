@@ -7,7 +7,25 @@ const getStones = (req, res, database) => {
     database.fetchStones(owner, fetchSucc, () => common.serverErrMsg(res))
 }
 
+const checkStone = (req) => {
+    req.check('name', 'name len [1, 20]').isLength({min:1, max:20})
+    req.check('owner', 'owner should set').isEmpty()
+    req.check('age', 'age between 1 and 130').isInt({min:1, max:130})
+    const err = req.validationErrors()
+    if(err){
+        let msg = ''
+        err.map( e => msg = `${msg}\n${e.msg}`)
+        return {res:false, msg:msg}
+    }
+    return {res:true, msg:'ok'}
+}
+
 const addStone = (req, res, database) => {
+    const checkRes = checkStone(req)
+    if(!checkRes.res){
+        common.serverMsg(res, 200, false, checkRes.msg, null)
+        return
+    }
     const stone = new Stone({
         owner: req.user._id, 
         name: req.body.name,
@@ -16,7 +34,7 @@ const addStone = (req, res, database) => {
     })
     const insertCallback = stone => {
         if(stone)
-            res.json(stone)
+            common.serverMsg(res, 200, true, 'ok', stone)
     }
     database.insertStone(stone, insertCallback, ()=>common.serverErrMsg(res))
 }

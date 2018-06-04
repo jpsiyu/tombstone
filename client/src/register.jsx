@@ -14,6 +14,7 @@ import {
 } from 'react-bootstrap'
 import axios from 'axios'
 import {Navigation} from './navigation.jsx'
+import {language} from './language.js'
 
 class Register extends React.Component{
     constructor(){
@@ -54,11 +55,9 @@ class Register extends React.Component{
             <Navigation />
             <Row>
                 <Col sm={4} smOffset={1}>
-                    <h1 style={textStyle}>Tombstone bla bla bla</h1>
+                    <h1 style={textStyle}>{language.main_word}</h1>
                     <p style={textStyle}>
-                        blafsdofj sdjfsdjf sodfjoasdjf sdjf jsdfljsdfj sldjfsdj  fsfj
-                        sjfosjdfoasdjfljasdlfjlasjdflajsdfljasldfjasfdljsalfj
-                        sdfsfjsdjflsajdflsjdf ljsdfljsdlfjlasjdflsajf
+                        {language.main_desc}
                     </p>
                 </Col>
 
@@ -66,18 +65,18 @@ class Register extends React.Component{
                     <Jumbotron className="container-fluid">
                     <Form onSubmit={this.onSubmit}>
                         <FormGroup>
-                            <ControlLabel>username</ControlLabel>
-                            <FormControl type="text" placeholder="username" inputRef={ref => this._username=ref} /> 
+                            <ControlLabel>{language.username}</ControlLabel>
+                            <FormControl type="text" placeholder={language.username} inputRef={ref => this._username=ref} /> 
                         </FormGroup>
                         <FormGroup>
-                            <ControlLabel>email</ControlLabel>
-                            <FormControl type="email" placeholder="email" inputRef={ref => this._email=ref} /> 
+                            <ControlLabel>{language.email}</ControlLabel>
+                            <FormControl type="email" placeholder={language.email} inputRef={ref => this._email=ref} /> 
                         </FormGroup>
                         <FormGroup>
-                            <ControlLabel>password</ControlLabel>
-                            <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
+                            <ControlLabel>{language.password}</ControlLabel>
+                            <FormControl type="password" placeholder={language.password} inputRef={ref => this._passwd=ref} /> 
                         </FormGroup>
-                        <Button bsStyle="primary" type="submit">Sign up for tombstone</Button>
+                        <Button bsStyle="primary" type="submit">{language.sign_up_word}</Button>
                     </Form>
                     </Jumbotron>
                 </Col>

@@ -13,6 +13,7 @@ import {
     Image,
 } from 'react-bootstrap'
 import axios from 'axios'
+import {language} from './language.js'
 
 
 class Login extends React.Component{
@@ -49,6 +50,7 @@ class Login extends React.Component{
             marginRight: 'auto',
             width: 64,
             height: 64,
+            marginTop: 100,
         }
         const textStyle = {
             textAlign: 'center'
@@ -57,18 +59,18 @@ class Login extends React.Component{
             <Row>
             <Col sm={4} smOffset={4}>
                 <Image src='/res/stone.png' circle style={imgStyle}/>
-                <h4 style={textStyle}>Sign in to Tombstone</h4>
+                <h4 style={textStyle}>{language.sign_in_word}</h4>
                 <Jumbotron className="container-fluid">
                 <Form onSubmit={this.onSubmit}>
                 <FormGroup>
-                    <ControlLabel>username</ControlLabel>
-                    <FormControl type="text" placeholder="username" inputRef={ref => this._username=ref} /> 
+                    <ControlLabel>{language.username}</ControlLabel>
+                    <FormControl type="text" placeholder={language.username} inputRef={ref => this._username=ref} /> 
                 </FormGroup>
                 <FormGroup>
-                    <ControlLabel>password</ControlLabel>
-                    <FormControl type="password" placeholder="password" inputRef={ref => this._passwd=ref} /> 
+                    <ControlLabel>{language.password}</ControlLabel>
+                    <FormControl type="password" placeholder={language.password} inputRef={ref => this._passwd=ref} /> 
                 </FormGroup>
-                <Button bsStyle="primary" type="submit">Login</Button>
+                <Button bsStyle="primary" type="submit">{language.sign_in}</Button>
                 </Form>
                 </Jumbotron>
             </Col>
