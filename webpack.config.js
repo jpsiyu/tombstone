@@ -6,12 +6,42 @@ module.exports = {
       main: path.resolve(__dirname, 'client/src/main.jsx'),
       register: path.resolve(__dirname, 'client/src/register.jsx'), 
       login: path.resolve(__dirname, 'client/src/login.jsx'), 
+      vendor: [
+        'react', 
+        'react-dom', 
+        'react-bootstrap', 
+        'react-router-dom', 
+        'react-router-bootstrap',
+        'axios',
+      ],
     },
     output: {
-        path: path.resolve(__dirname, 'client/public'),
-        filename: '[name].bundle.js'
+        path: path.resolve(__dirname, 'client/public/bundle'),
+        filename: '[name].bundle.js',
     },
-    mode:'development',
+    optimization: {
+      splitChunks: {
+        chunks: "async",
+        minSize: 30000,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',
+        name: true,
+        cacheGroups: {
+            vendors: {
+                test: /[\\/]node_modules[\\/]/,
+                priority: -10
+            },
+            default: {
+                minChunks: 2,
+                priority: -20,
+                reuseExistingChunk: true
+            }
+        }
+      }
+    },
+    mode:'production',
     module:{
       rules:[
         {
@@ -30,5 +60,10 @@ module.exports = {
           use: [ 'style-loader', 'css-loader' ]
         }
       ]
-    }
+    },
+    plugins:[
+      new webpack.DefinePlugin({
+        'process.env': { NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
+      }),
+    ]
 }
