@@ -34,6 +34,19 @@ class Database {
         })
     }
 
+    // find user by name or email
+    findUserByNameOrEmail(username, email, callback, errCallback){
+        User.findOne({$or: [
+            {username},
+            {email},
+        ]}, (err, user) => {
+            if(err)
+                this.err(err, errCallback)
+            else
+                callback(user)
+        })
+    }
+
     // insert user
     insertUser(user, callback, errCallback){
         user.save( (err, user) => {
@@ -45,8 +58,8 @@ class Database {
     }
 
     // fetch stones
-    fetchStones(callback, errCallback){
-        Stone.find( (err, stones) => {
+    fetchStones(owner, callback, errCallback){
+        Stone.find({owner}, (err, stones) => {
             if(err)
                 this.err(err, errCallback)
             else
@@ -75,9 +88,9 @@ class Database {
     }
 
     //delte stone by id
-    deleteStoneById(id, callback, errCallback){
+    deleteStoneById(id, owner, callback, errCallback){
         const objId = ObjectId(id)
-        Stone.remove({_id: id}, (err) => {
+        Stone.remove({_id: id, owner}, (err) => {
             if(err)
                 this.err(err, errCallback)
             else
@@ -94,6 +107,7 @@ const userSchema = mongoose.Schema({
 })
 
 const stoneSchema = mongoose.Schema({
+    owner: Object,
     name: String,
     age: Number,
     location: [Number],

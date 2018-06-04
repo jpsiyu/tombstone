@@ -22,7 +22,7 @@ const postLogin = (req, res, next, passport) => {
         }else if(!user){
             common.serverMsg(res, 200, false,  info.message, null)
         }else{
-            req.login(user._id, err => {
+            req.login(user, err => {
                 common.serverMsg(res, 200, true,  info.message, user)
             })
         }
@@ -50,7 +50,7 @@ const postRegister = (req, res, database) => {
         const errCallback = () => common.serverErrMsg(res)
         const insertUserCallback = user => {
             if(user){
-                req.login(user._id, err => {
+                req.login(user, err => {
                     common.serverMsg(res, 200, true, `add user ${user.username} success`, null)
                 })
             }else{
@@ -59,12 +59,14 @@ const postRegister = (req, res, database) => {
         }
         const findUserCallback = db_user => {
             if(db_user !== null){
-                common.serverMsg(res, 200, false, `${db_user.username} already exits`, null)
-                return
-            }
-            database.insertUser(user, insertUserCallback, errCallback)
+                const exitsMsg = db_user.username === user.username ?
+                    `${db_user.username} already exists` :
+                    `${db_user.email} already exists`
+                common.serverMsg(res, 200, false, exitsMsg, null)
+            }else
+                database.insertUser(user, insertUserCallback, errCallback)
         }
-        database.findUserByName(user.username, findUserCallback, errCallback)
+        database.findUserByNameOrEmail(user.username, user.email, findUserCallback, errCallback)
     })
 }
 
@@ -74,7 +76,7 @@ const getLogout = (req, res) => {
     res.redirect('/')
 }
 
-const loginMatch = (name, password, done, database) => {
+const loginMatch = (nameOrEmail, password, done, database) => {
     const findUserCallback = user => {
         if(user === null){
             return done(null, false, {message: 'no user'})
@@ -90,7 +92,7 @@ const loginMatch = (name, password, done, database) => {
             }
         })
     }
-    database.findUserByName(name, findUserCallback)
+    database.findUserByNameOrEmail(nameOrEmail, nameOrEmail, findUserCallback)
 }
 
 module.exports = {

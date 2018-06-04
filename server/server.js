@@ -31,7 +31,6 @@ app.use(flash())
 app.use(morgan('tiny'))
 app.use(expressValidator())
 
-
 // routes
 app.get('/', (req, res) => {
     const filePath = path.resolve(__dirname, common.HTML_PATH, 'register.html')
@@ -94,12 +93,12 @@ passport.use(new LocalStrategy(
     (name, password, done) => login.loginMatch(name, password, done, database)
 ))
 
-passport.serializeUser(function(userId, done) {
-    done(null, userId);
+passport.serializeUser(function(user, done) {
+    done(null, user);
 });
   
-passport.deserializeUser(function(userId, done) {
-    done(null, userId)
+passport.deserializeUser(function(user, done) {
+    done(null, user)
 });
 
 
