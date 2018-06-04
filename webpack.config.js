@@ -6,14 +6,6 @@ module.exports = {
       main: path.resolve(__dirname, 'client/src/main.jsx'),
       register: path.resolve(__dirname, 'client/src/register.jsx'), 
       login: path.resolve(__dirname, 'client/src/login.jsx'), 
-      vendor: [
-        'react', 
-        'react-dom', 
-        'react-bootstrap', 
-        'react-router-dom', 
-        'react-router-bootstrap',
-        'axios',
-      ],
     },
     output: {
         path: path.resolve(__dirname, 'client/public/bundle'),
