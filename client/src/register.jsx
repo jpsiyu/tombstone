@@ -51,41 +51,24 @@ class Register extends React.Component{
         const textStyle = {
             color: 'white'
         }
-        return <div style={divStyle} >
-            <Navigation />
-            <Row>
-                <Col sm={4} smOffset={1}>
-                    <h1 style={textStyle}>{language.main_word}</h1>
-                    <p style={textStyle}>
-                        {language.main_desc}
-                    </p>
-                </Col>
-
-                <Col sm={4} smOffset={1} >
-                    <Jumbotron className="container-fluid">
-                    <Form onSubmit={this.onSubmit}>
-                        <FormGroup>
-                            <ControlLabel>{language.username}</ControlLabel>
-                            <FormControl type="text" placeholder={language.username} inputRef={ref => this._username=ref} /> 
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>{language.email}</ControlLabel>
-                            <FormControl type="email" placeholder={language.email} inputRef={ref => this._email=ref} /> 
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>{language.password}</ControlLabel>
-                            <FormControl type="password" placeholder={language.password} inputRef={ref => this._passwd=ref} /> 
-                        </FormGroup>
-                        <Button bsStyle="primary" type="submit">{language.sign_up_word}</Button>
-                    </Form>
-                    </Jumbotron>
-                </Col>
-            </Row>
-        </div>
+        return <Jumbotron className="container-fluid">
+            <Form onSubmit={this.onSubmit}>
+                <FormGroup>
+                    <ControlLabel>{language.username}</ControlLabel>
+                    <FormControl type="text" placeholder={language.username} inputRef={ref => this._username=ref} /> 
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>{language.email}</ControlLabel>
+                    <FormControl type="email" placeholder={language.email} inputRef={ref => this._email=ref} /> 
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>{language.password}</ControlLabel>
+                    <FormControl type="password" placeholder={language.password} inputRef={ref => this._passwd=ref} /> 
+                </FormGroup>
+                <Button bsStyle="primary" type="submit">{language.sign_up_word}</Button>
+            </Form>
+        </Jumbotron>
     }
 }
 
-ReactDOM.render(
-    <Register />,
-    document.getElementById('register')
-)
+module.exports = Register

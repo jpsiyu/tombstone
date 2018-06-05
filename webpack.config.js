@@ -4,8 +4,7 @@ const path = require('path')
 module.exports = {
     entry: {
       main: path.resolve(__dirname, 'client/src/main.jsx'),
-      register: path.resolve(__dirname, 'client/src/register.jsx'), 
-      login: path.resolve(__dirname, 'client/src/login.jsx'), 
+      entry: path.resolve(__dirname, 'client/src/entry.jsx'),
     },
     output: {
         path: path.resolve(__dirname, 'client/public/bundle'),

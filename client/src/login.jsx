@@ -56,10 +56,10 @@ class Login extends React.Component{
             textAlign: 'center'
         }
         return <div>
-            <Row>
-            <Col sm={4} smOffset={4}>
+            {/*
                 <Image src='/res/stone.png' circle style={imgStyle}/>
                 <h4 style={textStyle}>{language.sign_in_word}</h4>
+            */}
                 <Jumbotron className="container-fluid">
                 <Form onSubmit={this.onSubmit}>
                 <FormGroup>
@@ -73,13 +73,8 @@ class Login extends React.Component{
                 <Button bsStyle="primary" type="submit">{language.sign_in}</Button>
                 </Form>
                 </Jumbotron>
-            </Col>
-            </Row>
         </div>
     }
 }
 
-ReactDOM.render(
-    <Login />,
-    document.getElementById('login')
-)
+module.exports = Login

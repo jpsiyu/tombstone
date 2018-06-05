@@ -1,9 +1,9 @@
 const MSG_SERVER_ERROR = 'Internal Server Error'
 const HTML_PATH = '../client/public'
 
-const serverMsg = (res, statusCode, isOk, message, data) => {
+const serverMsg = (res, statusCode, ok, message, data) => {
     const m = {
-        ok: isOk,
+        ok,
         message,
         data
     }

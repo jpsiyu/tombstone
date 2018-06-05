@@ -10,7 +10,7 @@ import {Generate} from './generate.jsx'
 import {Topics} from './topics.jsx'
 
 import {language} from './language.js'
-import {Navigation} from './navigation.jsx'
+import Navigation from './navigation.jsx'
 
 class App extends React.Component{
     constructor(){

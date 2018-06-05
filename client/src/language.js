@@ -30,8 +30,8 @@ const chinese = {
     email: '邮件',
     password: '密码',
     topics: '主题',
-    main_word: '先人居',
-    main_desc: '先人居记录先人门的门牌号，小孝顺再也不用担心找不到老人家啦！',
+    main_word: '前人居',
+    main_desc: '前人居记录先人门的门牌号，小孝顺再也不用担心找不到老人家啦！',
 }
 
 const language = chinese

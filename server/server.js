@@ -33,21 +33,17 @@ app.use(expressValidator())
 
 // routes
 app.get('/', (req, res) => {
-    const filePath = path.resolve(__dirname, common.HTML_PATH, 'register.html')
-    res.sendFile(filePath)
-})
-
-app.post('/register', (req, res) => {
-    login.postRegister(req, res, database)
-})
-
-app.get('/login',  (req, res, next) => {
     login.getLogin(req, res)
 })
 
 app.post('/login', (req, res, next) => {
     login.postLogin(req, res, next, passport)
 })
+
+app.post('/register', (req, res) => {
+    login.postRegister(req, res, database)
+})
+
 
 app.get('/logout', (req, res) => {
     login.getLogout(req, res)

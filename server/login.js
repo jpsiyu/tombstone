@@ -10,7 +10,7 @@ const getLogin = (req, res) => {
     if(req.isAuthenticated()){
         res.redirect('/main')
     }else{
-        const filePath = path.resolve(__dirname, common.HTML_PATH, 'login.html')
+        const filePath = path.resolve(__dirname, common.HTML_PATH, 'entry.html')
         res.sendFile(filePath)
     }
 }
@@ -81,9 +81,12 @@ const postRegister = (req, res, database) => {
 }
 
 const getLogout = (req, res) => {
-    if(req.isAuthenticated())
+    let isOK = false 
+    if(req.isAuthenticated()){
         req.logout()
-    res.redirect('/')
+        isOK = true
+    }
+    common.serverMsg(res, 200, isOK, '', null)
 }
 
 const loginMatch = (nameOrEmail, password, done, database) => {
