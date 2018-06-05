@@ -101,5 +101,5 @@ passport.deserializeUser(function(user, done) {
 
 const database = new Database()
 database.connect( () => {
-    app.listen(3000, () => console.log('server listening on 3000'))
+    app.listen(3000, '127.0.0.1', () => console.log('server listening on 3000'))
 })
